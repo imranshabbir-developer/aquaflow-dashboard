@@ -8,4 +8,4 @@ export const initialConversations: Conversation[] = [
 ];
 export const contacts = [
  ['Macy Johnson','Billing contact','(818) 429-2763','Active'],['Aaron Williams','Patient','(909) 671-0123','Active'],['TriZetto Support','Vendor','(888) 698-4554','Active'],['Diana Patel','Practice manager','(312) 555-0184','Invited'],['Marcus Lee','Patient','(213) 555-0142','Active']
-];
+] as const;
