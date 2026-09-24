@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { ConfirmDeleteDialog } from './confirm-delete-dialog';
 import { avatarStyle, cn } from '@/lib/utils';
 
 type SearchField = 'firstName' | 'lastName' | 'company' | 'phone';
@@ -154,6 +155,7 @@ export function ContactsPage() {
   const [importFile, setImportFile] = useState<File | null>(null);
   const [importError, setImportError] = useState('');
   const [importing, setImporting] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -270,7 +272,7 @@ export function ContactsPage() {
 
   return (
     <div className="flex h-full min-h-0 flex-col overflow-hidden bg-workspace">
-      <div className="contacts-toolbar">
+      <div className={cn('contacts-toolbar', active && 'max-md:hidden')}>
         <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
           <Input
             aria-label={`Search by ${searchBy === 'firstName' ? 'first name' : searchBy === 'lastName' ? 'last name' : searchBy === 'company' ? 'company name' : 'phone number'}`}
@@ -280,13 +282,13 @@ export function ContactsPage() {
               setVisible(PAGE);
             }}
             placeholder="Search"
-            className="h-9 min-w-[8rem] flex-1 rounded-full bg-muted/50"
+            className="h-10 min-w-0 flex-1 rounded-full bg-muted/50 sm:h-9 sm:min-w-[8rem]"
             onKeyDown={(e) => {
               if (e.key === 'Enter') setVisible(PAGE);
             }}
           />
           <Select value={searchBy} onValueChange={(v) => setSearchBy(v as SearchField)}>
-            <SelectTrigger className="h-9 w-[9.75rem] shrink-0 rounded-full bg-muted/50" aria-label="Search contacts by">
+            <SelectTrigger className="h-10 w-full shrink-0 rounded-full bg-muted/50 sm:h-9 sm:w-[9.75rem]" aria-label="Search contacts by">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -296,18 +298,18 @@ export function ContactsPage() {
               <SelectItem value="phone">Phone Number</SelectItem>
             </SelectContent>
           </Select>
-          <Button type="button" size="icon" variant="ghost" aria-label="Search contacts">
+          <Button type="button" size="icon" variant="ghost" className="hidden sm:inline-flex" aria-label="Search contacts">
             <Search size={16} />
           </Button>
           <Button type="button" size="icon" variant="ghost" aria-label="Clear search" onClick={clearSearch}>
             <Trash2 size={16} />
           </Button>
         </div>
-        <div className="flex shrink-0 items-center gap-2">
+        <div className="flex w-full shrink-0 items-center gap-2 sm:w-auto">
           <Button type="button" size="icon" variant="outline" className="rounded-full" aria-label="Import contacts" onClick={() => { setImportError(''); setImportOpen(true); }}>
             <UserPlus />
           </Button>
-          <Button type="button" className="rounded-full" onClick={openNew}>
+          <Button type="button" className="min-w-0 flex-1 rounded-full sm:flex-none" onClick={openNew}>
             <Plus /> New Contact
           </Button>
         </div>
@@ -364,11 +366,11 @@ export function ContactsPage() {
               <Field label="Company Name" value={active.company} />
               <Field label="Title" value={active.title} />
               <Field label="Phone Number" value={active.phone} />
-              <div className="mt-6 flex flex-wrap gap-2">
-                <Button type="button" className="rounded-full" onClick={openEdit}>
+              <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                <Button type="button" className="w-full rounded-full sm:w-auto" onClick={openEdit}>
                   <Pencil /> Edit Contact Info
                 </Button>
-                <Button type="button" variant="destructive" className="rounded-full" onClick={removeContact}>
+                <Button type="button" variant="destructive" className="w-full rounded-full sm:w-auto" onClick={() => setDeleteOpen(true)}>
                   <Trash2 /> Delete Contact
                 </Button>
               </div>
@@ -436,6 +438,14 @@ export function ContactsPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <ConfirmDeleteDialog
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
+        title="Delete this contact?"
+        description={active ? `${displayName(active)} will be removed from your directory. This cannot be undone.` : 'This contact will be removed from your directory.'}
+        confirmLabel="Delete Contact"
+        onConfirm={removeContact}
+      />
     </div>
   );
 }

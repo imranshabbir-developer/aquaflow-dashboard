@@ -27,3 +27,37 @@ export const initialContacts: Contact[] = [
  {id:'c14',firstName:'',lastName:'',company:'IPS',title:'',phone:'13235550222'},
  {id:'c15',firstName:'',lastName:'',company:'IPS',title:'',phone:'14155550333'},
 ];
+export type WorkspaceUser = {
+  id:string;
+  name:string;
+  nick:string;
+  email:string;
+  userType:string;
+  phone:string;
+  network:string;
+  bulkSms:boolean;
+  enabled:boolean;
+  password:string;
+};
+export const initialUsers: WorkspaceUser[] = [
+ {id:'u1',name:'M Ubaid',nick:'M Ubaid',email:'m.ubaid@ipscloud.co',userType:'user',phone:'17077769363',network:'infobip',bulkSms:false,enabled:true,password:'12345678'},
+ {id:'u2',name:'Farzan Naqvi',nick:'Adam Wright',email:'sales@ipscloud.co',userType:'user',phone:'19098503315',network:'telnyx',bulkSms:false,enabled:true,password:'12345678'},
+ {id:'u3',name:'irfan',nick:'irfan',email:'irfan.abbas@p3care.com',userType:'user',phone:'195191073000',network:'telnyx',bulkSms:false,enabled:true,password:'12345678'},
+ {id:'u4',name:'irfan',nick:'abbas',email:'irfan.abbas@ipscloud.co',userType:'user',phone:'120992509229',network:'telnyx',bulkSms:false,enabled:true,password:'12345678'},
+ {id:'u5',name:'ps',nick:'ps',email:'patientservices@p3care.com',userType:'user',phone:'19096710123',network:'didww',bulkSms:false,enabled:true,password:'12345678'},
+ {id:'u6',name:'Imran Shabbir',nick:'IS',email:'imran@p3care.com',userType:'user',phone:'19096710124',network:'didww',bulkSms:true,enabled:true,password:'12345678'},
+ {id:'u7',name:'Macy Johnson',nick:'Macy',email:'macy@p3care.com',userType:'user',phone:'18184292763',network:'infobip',bulkSms:false,enabled:true,password:'12345678'},
+ {id:'u8',name:'Diana Patel',nick:'Diana',email:'diana@p3care.com',userType:'user',phone:'13125550184',network:'telnyx',bulkSms:true,enabled:true,password:'12345678'},
+ {id:'u9',name:'Aaron Cole',nick:'Aaron',email:'aaron@p3care.com',userType:'user',phone:'12135550111',network:'infobip',bulkSms:false,enabled:true,password:'12345678'},
+ {id:'u10',name:'Marcus Lee',nick:'Marcus',email:'marcus@p3care.com',userType:'user',phone:'12135550142',network:'didww',bulkSms:false,enabled:true,password:'12345678'},
+ {id:'u11',name:'Nora Kim',nick:'Nora',email:'nora@ipscloud.co',userType:'user',phone:'14155550190',network:'telnyx',bulkSms:false,enabled:true,password:'12345678'},
+ {id:'u12',name:'James Ortiz',nick:'James',email:'james@p3care.com',userType:'user',phone:'13125550210',network:'infobip',bulkSms:true,enabled:true,password:'12345678'},
+ {id:'u13',name:'Priya Shah',nick:'Priya',email:'priya@ipscloud.co',userType:'user',phone:'17085550320',network:'didww',bulkSms:false,enabled:true,password:'12345678'},
+ {id:'u14',name:'Owen Blake',nick:'Owen',email:'owen@p3care.com',userType:'user',phone:'18185550430',network:'telnyx',bulkSms:false,enabled:true,password:'12345678'},
+ {id:'u15',name:'Lina Gomez',nick:'Lina',email:'lina@p3care.com',userType:'user',phone:'19095550540',network:'infobip',bulkSms:false,enabled:true,password:'12345678'},
+ {id:'u16',name:'Chris Young',nick:'Chris',email:'chris@ipscloud.co',userType:'user',phone:'13235550650',network:'didww',bulkSms:true,enabled:true,password:'12345678'},
+ {id:'u17',name:'Sara Malik',nick:'Sara',email:'sara@p3care.com',userType:'user',phone:'14705550760',network:'telnyx',bulkSms:false,enabled:true,password:'12345678'},
+ {id:'u18',name:'Ben Carter',nick:'Ben',email:'ben@ipscloud.co',userType:'user',phone:'18405550870',network:'infobip',bulkSms:false,enabled:true,password:'12345678'},
+ {id:'u19',name:'Hana Reid',nick:'Hana',email:'hana@p3care.com',userType:'user',phone:'19175550980',network:'didww',bulkSms:false,enabled:true,password:'12345678'},
+ {id:'u20',name:'Tom Ellis',nick:'Tom',email:'tom@ipscloud.co',userType:'user',phone:'18885550090',network:'telnyx',bulkSms:false,enabled:true,password:'12345678'},
+];

@@ -38,8 +38,9 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed left-[50%] top-[50%] z-50 grid w-[calc(100%-1.25rem)] max-w-lg max-h-[min(90svh,44rem)] translate-x-[-50%] translate-y-[-50%] gap-4 overflow-y-auto border bg-background p-5 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 rounded-lg sm:p-6",
+        "fixed z-50 grid gap-4 overflow-y-auto overscroll-contain border bg-background p-5 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 left-0 right-0 bottom-0 top-auto w-full max-w-none max-h-[min(92svh,44rem)] translate-x-0 translate-y-0 rounded-t-2xl rounded-b-none pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:left-[50%] sm:right-auto sm:bottom-auto sm:top-[50%] sm:w-[calc(100%-1.25rem)] sm:max-w-lg sm:translate-x-[-50%] sm:translate-y-[-50%] sm:rounded-lg sm:p-6 sm:pb-6",
         className,
+        "max-sm:left-0 max-sm:right-0 max-sm:bottom-0 max-sm:top-auto max-sm:w-full max-sm:max-w-none max-sm:translate-x-0 max-sm:translate-y-0 max-sm:rounded-t-2xl max-sm:rounded-b-none",
       )}
       {...props}
     >
@@ -60,7 +61,7 @@ DialogHeader.displayName = "DialogHeader";
 
 const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className)}
+    className={cn("flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-2 sm:space-x-0 [&_button]:w-full sm:[&_button]:w-auto", className)}
     {...props}
   />
 );
