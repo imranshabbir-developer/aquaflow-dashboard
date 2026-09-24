@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+ <Worksheet ss:Name="Contacts">
+  <Table>
+   <Row>
+    <Cell><Data ss:Type="String">First Name</Data></Cell>
+    <Cell><Data ss:Type="String">Last Name</Data></Cell>
+    <Cell><Data ss:Type="String">Company Name</Data></Cell>
+    <Cell><Data ss:Type="String">Title</Data></Cell>
+    <Cell><Data ss:Type="String">Phone Number</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String">Jane</Data></Cell>
+    <Cell><Data ss:Type="String">Doe</Data></Cell>
+    <Cell><Data ss:Type="String">IPS</Data></Cell>
+    <Cell><Data ss:Type="String">Coordinator</Data></Cell>
+    <Cell><Data ss:Type="String">18885550123</Data></Cell>
+   </Row>
+  </Table>
+ </Worksheet>
+</Workbook>

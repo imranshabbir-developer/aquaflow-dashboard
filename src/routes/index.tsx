@@ -1,5 +1,75 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { ArrowRight, Eye, EyeOff, LockKeyhole, MessageCircleMore, ShieldCheck } from 'lucide-react';
-import { useState } from 'react'; import { Button } from '@/components/ui/button'; import { Input } from '@/components/ui/input';
-export const Route=createFileRoute('/')({head:()=>({meta:[{title:'Sign in — P3 Care Communications'},{name:'description',content:'Secure access to the P3 Care patient communications workspace.'},{property:'og:title',content:'P3 Care Communications'},{property:'og:description',content:'Secure patient messaging workspace.'},{property:'og:type',content:'website'},{name:'twitter:card',content:'summary_large_image'}]}),component:Login});
-function Login(){const nav=useNavigate();const [email,setEmail]=useState('');const [password,setPassword]=useState('');const [show,setShow]=useState(false);const [error,setError]=useState('');const [loading,setLoading]=useState(false);const submit=(e:React.FormEvent)=>{e.preventDefault();if(!email.trim()||!password.trim()){setError('Enter an email and password to continue.');return}setLoading(true);setTimeout(()=>{sessionStorage.setItem('p3care-demo','yes');nav({to:'/sms'})},450)};return <main className="login-canvas"><div className="login-grid"/><section className="login-panel"><div className="login-brand"><span className="brand-mark"><MessageCircleMore/></span><span><strong>P3 Care</strong><small>Communications</small></span></div><div className="login-copy"><span className="secure-chip"><ShieldCheck/>Secure healthcare messaging</span><h1>Every conversation,<br/><em>clearly connected.</em></h1><p>A focused workspace for care teams to reach patients, coordinate follow-ups, and keep every message accountable.</p></div><div className="login-trust"><LockKeyhole/><div><strong>Protected workspace</strong><span>Role-aware access designed for healthcare teams.</span></div></div></section><section className="login-form-wrap"><form className="login-card" onSubmit={submit}><div className="mb-8"><p className="mb-2 text-xs font-bold uppercase text-primary">Welcome back</p><h2 className="font-display text-3xl font-semibold">Sign in to your workspace</h2><p className="mt-2 text-sm text-muted-foreground">Use any email and password to view the prototype.</p></div><label className="field-label">Email address<Input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="you@practice.com" className="mt-2 h-11"/></label><label className="field-label mt-5 block">Password<div className="relative mt-2"><Input type={show?'text':'password'} value={password} onChange={e=>setPassword(e.target.value)} placeholder="Enter your password" className="h-11 pr-11"/><Button type="button" variant="ghost" size="icon" className="absolute right-1 top-1" onClick={()=>setShow(!show)} aria-label="Toggle password visibility">{show?<EyeOff/>:<Eye/>}</Button></div></label><div className="my-5 flex items-center justify-between text-sm"><label className="flex items-center gap-2"><input type="checkbox" className="accent-primary"/>Remember me</label><button type="button" className="font-semibold text-primary">Forgot password?</button></div>{error&&<p className="mb-4 text-sm text-destructive">{error}</p>}<Button className="h-11 w-full" disabled={loading}>{loading?'Opening workspace…':<>Sign in <ArrowRight/></>}</Button><p className="mt-6 text-center text-xs text-muted-foreground">Authorized team members only</p></form></section></main>}
+import { useState, type FormEvent } from 'react';
+
+export const Route = createFileRoute('/')({
+  head: () => ({
+    meta: [
+      { title: 'Sign in — P3 Care Communications' },
+      { name: 'description', content: 'Secure access to the P3 Care patient communications workspace.' },
+      { property: 'og:title', content: 'P3 Care Communications' },
+      { property: 'og:description', content: 'Secure patient messaging workspace.' },
+      { property: 'og:type', content: 'website' },
+      { name: 'twitter:card', content: 'summary_large_image' },
+    ],
+    links: [
+      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap' },
+    ],
+  }),
+  component: Login,
+});
+
+function Login() {
+  const nav = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const submit = (e: FormEvent) => {
+    e.preventDefault();
+    if (!email.trim() || !password.trim()) {
+      setError('Enter an email and password to continue.');
+      return;
+    }
+    setLoading(true);
+    setTimeout(() => {
+      sessionStorage.setItem('p3care-demo', 'yes');
+      nav({ to: '/sms' });
+    }, 450);
+  };
+
+  return (
+    <main className="ring-login">
+      <div className="glow-rings">
+        <i />
+        <i />
+        <i />
+        <form className="login" onSubmit={submit}>
+          <h2>Login</h2>
+          <div className="inputBx">
+            <input
+              type="text"
+              placeholder="Username"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="username"
+            />
+          </div>
+          <div className="inputBx">
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+            />
+          </div>
+          {error && <p className="ring-login-error">{error}</p>}
+          <div className="inputBx">
+            <input type="submit" value={loading ? 'Opening workspace…' : 'Sign in'} disabled={loading} />
+          </div>
+        </form>
+      </div>
+    </main>
+  );
+}

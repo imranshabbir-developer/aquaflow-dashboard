@@ -1,28 +1,261 @@
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router';
-import { Bell, ChevronDown, ContactRound, LogOut, Menu, MessageCircleMore, Send, Settings, ShieldCheck, UserRound, UsersRound, X } from 'lucide-react';
-import { useEffect, useState, type ReactNode } from 'react';
+import { Bell, ChevronDown, ContactRound, KeyRound, LogOut, Menu, MessageCircleMore, PanelLeftClose, PanelLeftOpen, Send, Settings, UserRound, UsersRound, X } from 'lucide-react';
+import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { Input } from '@/components/ui/input';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { avatarStyle, cn } from '@/lib/utils';
 
 const nav = [
- {to:'/sms',label:'Messages',icon:MessageCircleMore}, {to:'/contacts',label:'Contacts',icon:ContactRound},
- {to:'/bulk-sms',label:'Bulk SMS',icon:Send}, {to:'/users',label:'Users & roles',icon:UsersRound},
- {to:'/settings',label:'Settings',icon:Settings}, {to:'/profile',label:'My profile',icon:UserRound},
+  { to: '/sms', label: 'Messages', icon: MessageCircleMore },
+  { to: '/contacts', label: 'Contacts', icon: ContactRound },
+  { to: '/bulk-sms', label: 'Bulk SMS', icon: Send },
+  { to: '/users', label: 'Users & roles', icon: UsersRound },
 ] as const;
-const titles:Record<string,[string,string]> = { '/sms':['Messages','Manage patient conversations'], '/contacts':['Contacts','Organize people and communication details'], '/bulk-sms':['Bulk SMS','Create and schedule audience campaigns'], '/users':['Users & roles','Control team access and responsibilities'], '/settings':['Settings','Configure your messaging workspace'], '/profile':['My profile','Manage your personal information'] };
 
-export function AppShell({children}:{children:ReactNode}){
- const path=useRouterState({select:s=>s.location.pathname}); const navigate=useNavigate(); const [open,setOpen]=useState(false); const page=titles[path]??['Workspace',''];
- useEffect(()=>{ if(typeof window!=='undefined' && sessionStorage.getItem('p3care-demo')!=='yes') navigate({to:'/'}); },[navigate]);
- const logout=()=>{sessionStorage.removeItem('p3care-demo'); navigate({to:'/'});};
- return <div className="min-h-screen bg-background lg:flex">
-  {open&&<button aria-label="Close navigation" onClick={()=>setOpen(false)} className="fixed inset-0 z-30 bg-overlay lg:hidden"/>}
-  <aside className={cn('sidebar-gradient fixed inset-y-0 left-0 z-40 flex w-68 flex-col p-4 transition-transform duration-300 lg:translate-x-0',open?'translate-x-0':'-translate-x-full')}>
-   <div className="flex h-16 items-center justify-between px-3"><Link to="/sms" className="flex items-center gap-3" onClick={()=>setOpen(false)}><span className="brand-mark"><MessageCircleMore size={22}/></span><span><strong className="block font-display text-lg text-sidebar-primary-foreground">P3 Care</strong><small className="block text-sidebar-muted">Communications</small></span></Link><Button variant="sidebarGhost" size="icon" className="lg:hidden" onClick={()=>setOpen(false)} aria-label="Close menu"><X/></Button></div>
-   <div className="sidebar-divider my-4"/><p className="px-3 pb-2 text-xs font-semibold uppercase text-sidebar-muted">Workspace</p>
-   <nav className="space-y-1">{nav.map(item=><Link key={item.to} to={item.to} onClick={()=>setOpen(false)} activeProps={{className:'sidebar-link-active'}} className="sidebar-link"><item.icon/><span>{item.label}</span></Link>)}</nav>
-   <div className="mt-auto"><div className="sidebar-divider my-4"/><div className="mb-3 flex items-center gap-3 rounded-lg bg-sidebar-glass p-3"><div className="flex h-9 w-9 items-center justify-center rounded-md bg-sidebar-accent text-sm font-bold text-sidebar-accent-foreground">IS</div><div className="min-w-0 flex-1"><p className="truncate text-sm font-semibold text-sidebar-primary-foreground">Imran Shabbir</p><p className="text-xs text-sidebar-muted">Administrator</p></div><ShieldCheck className="text-sidebar-muted" size={17}/></div><Button variant="sidebarGhost" className="w-full justify-start" onClick={logout}><LogOut/> Sign out</Button></div>
-  </aside>
-  <div className="min-w-0 flex-1 lg:ml-68"><header className="sticky top-0 z-20 flex h-18 items-center gap-4 border-b border-border bg-surface/90 px-4 backdrop-blur-xl sm:px-6"><Button variant="ghost" size="icon" className="lg:hidden" onClick={()=>setOpen(true)} aria-label="Open menu"><Menu/></Button><div><h1 className="font-display text-xl font-semibold text-foreground">{page[0]}</h1><p className="hidden text-xs text-muted-foreground sm:block">{page[1]}</p></div><div className="ml-auto flex items-center gap-2"><Button variant="ghost" size="icon" aria-label="Notifications"><Bell/></Button><Button variant="outline" className="hidden sm:flex"><span className="status-dot"/> P3 Care Admin <ChevronDown/></Button></div></header><main>{children}</main></div>
- </div>
+const titles: Record<string, [string, string]> = {
+  '/sms': ['Messages', 'Manage patient conversations'],
+  '/contacts': ['Contacts', 'Organize people and communication details'],
+  '/bulk-sms': ['Bulk SMS', 'Create and schedule audience campaigns'],
+  '/users': ['Users & roles', 'Control team access and responsibilities'],
+  '/settings': ['Settings', 'Configure your messaging workspace'],
+  '/profile': ['My profile', 'Manage your personal information'],
+};
+
+const floatIcons = [
+  { Icon: MessageCircleMore, left: '16%', delay: '0s', duration: '7s' },
+  { Icon: Send, left: '62%', delay: '1.8s', duration: '8.2s' },
+  { Icon: MessageCircleMore, left: '38%', delay: '3.6s', duration: '6.8s' },
+  { Icon: Send, left: '74%', delay: '5s', duration: '9s' },
+  { Icon: MessageCircleMore, left: '24%', delay: '2.8s', duration: '7.6s' },
+];
+
+export function AppShell({ children }: { children: ReactNode }) {
+  const path = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+  const [pwOpen, setPwOpen] = useState(false);
+  const [currentPw, setCurrentPw] = useState('');
+  const [nextPw, setNextPw] = useState('');
+  const [confirmPw, setConfirmPw] = useState('');
+  const [pwError, setPwError] = useState('');
+  const page = titles[path] ?? ['Workspace', ''];
+  const slim = collapsed;
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && sessionStorage.getItem('p3care-demo') !== 'yes') {
+      navigate({ to: '/' });
+    }
+  }, [navigate]);
+
+  const logout = () => {
+    sessionStorage.removeItem('p3care-demo');
+    navigate({ to: '/' });
+  };
+
+  const resetPasswordForm = () => {
+    setCurrentPw('');
+    setNextPw('');
+    setConfirmPw('');
+    setPwError('');
+  };
+
+  const savePassword = (e: FormEvent) => {
+    e.preventDefault();
+    if (!currentPw.trim() || !nextPw.trim() || !confirmPw.trim()) {
+      setPwError('Fill in all password fields.');
+      return;
+    }
+    if (nextPw !== confirmPw) {
+      setPwError('New password and confirmation do not match.');
+      return;
+    }
+    resetPasswordForm();
+    setPwOpen(false);
+  };
+
+  return (
+    <div className="h-svh overflow-hidden bg-background lg:flex">
+      {open && (
+        <button aria-label="Close navigation" onClick={() => setOpen(false)} className="fixed inset-0 z-30 bg-overlay lg:hidden" />
+      )}
+      <aside
+        className={cn(
+          'sidebar-gradient fixed inset-y-0 left-0 z-40 flex flex-col transition-[width,transform,padding] duration-300 lg:translate-x-0',
+          slim ? 'w-16 p-2' : 'w-56 p-3',
+          open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
+        )}
+      >
+        <div className={cn('flex items-center', slim ? 'flex-col gap-1' : 'h-12 justify-between gap-1 px-1')}>
+          <Link to="/sms" className="flex min-w-0 items-center gap-2" onClick={() => setOpen(false)}>
+            <span className={cn('brand-mark', slim && 'h-9 w-9')}>
+              <MessageCircleMore size={slim ? 18 : 22} />
+            </span>
+            {!slim && (
+              <span>
+                <strong className="block font-display text-base text-white">P3 Care</strong>
+                <small className="block text-sidebar-muted">Communications</small>
+              </span>
+            )}
+          </Link>
+          <button
+            type="button"
+            className="sidebar-toggle"
+            onClick={() => setCollapsed((v) => !v)}
+            aria-label={slim ? 'Expand sidebar' : 'Collapse sidebar'}
+            title={slim ? 'Expand sidebar' : 'Collapse sidebar'}
+          >
+            {slim ? <PanelLeftOpen size={13} /> : <PanelLeftClose size={13} />}
+          </button>
+          {!slim && (
+            <Button variant="sidebarGhost" size="icon" className="lg:hidden" onClick={() => setOpen(false)} aria-label="Close menu">
+              <X />
+            </Button>
+          )}
+        </div>
+        <div className="sidebar-divider mt-1.5 mb-2" />
+        {!slim && <p className="mt-8 px-2 pb-2 text-xs font-semibold uppercase text-sidebar-muted">Workspace</p>}
+        <nav className="space-y-1">
+          {nav.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              title={item.label}
+              onClick={() => setOpen(false)}
+              activeProps={{ className: 'sidebar-link-active' }}
+              className={cn('sidebar-link', slim && 'sidebar-link-slim')}
+            >
+              <item.icon />
+              {!slim && <span>{item.label}</span>}
+            </Link>
+          ))}
+        </nav>
+        <div className="sidebar-float" aria-hidden>
+          {floatIcons.map((item, i) => (
+            <span
+              key={i}
+              className="sidebar-float-icon"
+              style={{ left: item.left, animationDelay: item.delay, animationDuration: item.duration }}
+            >
+              <item.Icon size={16} />
+            </span>
+          ))}
+        </div>
+        <div className="mt-auto">
+          <div className="sidebar-divider my-2" />
+          <button type="button" className="sidebar-signout" onClick={logout} aria-label="Sign out" title="Sign out">
+            <LogOut size={16} />
+            {!slim && <span>Sign out</span>}
+          </button>
+        </div>
+      </aside>
+      <div
+        className={cn(
+          'flex h-full min-w-0 flex-1 flex-col transition-[margin] duration-300',
+          slim ? 'lg:ml-16' : 'lg:ml-56',
+        )}
+      >
+        <header className="sticky top-0 z-20 flex h-16 shrink-0 items-center gap-3 border-b border-border bg-surface/90 px-3 backdrop-blur-xl sm:h-18 sm:gap-4 sm:px-6">
+          <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setOpen(true)} aria-label="Open menu">
+            <Menu />
+          </Button>
+          <div className="min-w-0">
+            <h1 className="truncate font-display text-lg font-semibold text-foreground sm:text-xl">{page[0]}</h1>
+            <p className="hidden truncate text-xs text-muted-foreground sm:block">{page[1]}</p>
+          </div>
+          <div className="ml-auto flex items-center gap-2">
+            <Button variant="ghost" size="icon" aria-label="Notifications">
+              <Bell />
+            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-10 gap-2 rounded-full px-1.5 sm:pr-3" aria-label="Account menu">
+                  <span className="avatar-sm" style={avatarStyle('Imran Shabbir')}>IS</span>
+                  <span className="hidden text-left sm:block">
+                    <strong className="block text-sm font-semibold leading-none">Imran Shabbir</strong>
+                    <small className="mt-1 block text-[0.7rem] text-muted-foreground">Administrator</small>
+                  </span>
+                  <ChevronDown size={16} className="text-muted-foreground" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" sideOffset={8} className="profile-menu w-56 p-1.5 data-[state=open]:slide-in-from-top-4 data-[state=open]:duration-300">
+                <DropdownMenuLabel className="profile-menu-user">
+                  <span className="avatar-sm" style={avatarStyle('Imran Shabbir')}>IS</span>
+                  <span>
+                    <strong>Imran Shabbir</strong>
+                    <small>Administrator</small>
+                  </span>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator className="profile-menu-line" />
+                <DropdownMenuItem onClick={() => navigate({ to: '/settings' })}>
+                  <Settings /> Settings
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: '/profile' })}>
+                  <UserRound /> Profile
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="profile-menu-line" />
+                <DropdownMenuItem onClick={() => { resetPasswordForm(); setPwOpen(true); }}>
+                  <KeyRound /> Change Password
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </header>
+        <main className="min-h-0 flex-1 overflow-auto">{children}</main>
+      </div>
+      <Dialog
+        open={pwOpen}
+        onOpenChange={(next) => {
+          setPwOpen(next);
+          if (!next) resetPasswordForm();
+        }}
+      >
+        <DialogContent className="password-modal max-w-sm gap-4 p-5">
+          <DialogHeader>
+            <DialogTitle>Change password</DialogTitle>
+            <DialogDescription>Keep your workspace access current.</DialogDescription>
+          </DialogHeader>
+          <form className="space-y-3" onSubmit={savePassword}>
+            <label className="field-label block">
+              Current password
+              <Input type="password" className="mt-1.5 h-9" value={currentPw} onChange={(e) => setCurrentPw(e.target.value)} autoComplete="current-password" />
+            </label>
+            <label className="field-label block">
+              New password
+              <Input type="password" className="mt-1.5 h-9" value={nextPw} onChange={(e) => setNextPw(e.target.value)} autoComplete="new-password" />
+            </label>
+            <label className="field-label block">
+              Confirm password
+              <Input type="password" className="mt-1.5 h-9" value={confirmPw} onChange={(e) => setConfirmPw(e.target.value)} autoComplete="new-password" />
+            </label>
+            {pwError && <p className="text-sm text-destructive">{pwError}</p>}
+            <DialogFooter className="pt-1">
+              <Button type="button" variant="outline" size="sm" onClick={() => setPwOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit" size="sm">
+                Update password
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
 }

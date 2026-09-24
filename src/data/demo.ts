@@ -9,3 +9,21 @@ export const initialConversations: Conversation[] = [
 export const contacts = [
  ['Macy Johnson','Billing contact','(818) 429-2763','Active'],['Aaron Williams','Patient','(909) 671-0123','Active'],['TriZetto Support','Vendor','(888) 698-4554','Active'],['Diana Patel','Practice manager','(312) 555-0184','Invited'],['Marcus Lee','Patient','(213) 555-0142','Active']
 ] as const;
+export type Contact = { id:string; firstName:string; lastName:string; company:string; title:string; phone:string };
+export const initialContacts: Contact[] = [
+ {id:'c1',firstName:'',lastName:'',company:'IPS',title:'',phone:'18886216510'},
+ {id:'c2',firstName:'',lastName:'',company:'IPS',title:'',phone:'18335926089'},
+ {id:'c3',firstName:'Macy',lastName:'Johnson',company:'IPS',title:'Billing contact',phone:'18184292763'},
+ {id:'c4',firstName:'',lastName:'',company:'IPS',title:'',phone:'14707727403'},
+ {id:'c5',firstName:'',lastName:'',company:'IPS',title:'',phone:'19175887817'},
+ {id:'c6',firstName:'',lastName:'',company:'IPS',title:'',phone:'18402009727'},
+ {id:'c7',firstName:'Aaron',lastName:'Williams',company:'IPS',title:'Patient',phone:'19096710123'},
+ {id:'c8',firstName:'',lastName:'',company:'TriZetto',title:'Support',phone:'18886984554'},
+ {id:'c9',firstName:'Diana',lastName:'Patel',company:'IPS',title:'Practice manager',phone:'13125550184'},
+ {id:'c10',firstName:'Marcus',lastName:'Lee',company:'IPS',title:'Patient',phone:'12135550142'},
+ {id:'c11',firstName:'',lastName:'',company:'IPS',title:'',phone:'18774547879'},
+ {id:'c12',firstName:'',lastName:'',company:'IPS',title:'',phone:'17018099156'},
+ {id:'c13',firstName:'',lastName:'',company:'IPS',title:'',phone:'18185550111'},
+ {id:'c14',firstName:'',lastName:'',company:'IPS',title:'',phone:'13235550222'},
+ {id:'c15',firstName:'',lastName:'',company:'IPS',title:'',phone:'14155550333'},
+];
